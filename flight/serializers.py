@@ -31,3 +31,9 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ("id", "flight", "flight_id", "user", "passenger")
+    
+    def create(self, validated_data):
+        passenger_data = validated_data.pop("passenger")
+        validated_data["user_id"] = self.context["request"].user.id
+        reservation = Reservation.objects.create(**validated_data)
+        
